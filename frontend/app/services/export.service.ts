@@ -1,15 +1,6 @@
 import { Injectable } from "@angular/core";
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpParams
-} from "@angular/common/http";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { ToastrService } from "ngx-toastr";
-
-import { AppConfig } from "@geonature_config/app.config";
-
-import { ModuleConfig } from "../module.config";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { ConfigService } from "@geonature/utils/configModule/core";
 
 export interface Export {
   id: number;
@@ -28,17 +19,22 @@ export interface ApiErrorResponse extends HttpErrorResponse {
 
 @Injectable()
 export class ExportService {
-  constructor(private _api: HttpClient) {}
+  public ABSOLUTE_MODULE_URL: string;
+  private _configService: ConfigService;
+  constructor(private _api: HttpClient) {
+    this.ABSOLUTE_MODULE_URL =
+      this._configService.getSettings("API_ENDPOINT") +
+      "/" +
+      this._configService.getSettings("EXPORTS.MODULE_URL");
+  }
 
   getExports() {
-    return this._api.get(
-      `${AppConfig.API_ENDPOINT}/${ModuleConfig.MODULE_URL}/`
-    );
+    return this._api.get(this.ABSOLUTE_MODULE_URL);
   }
 
   downloadExport(x: Export, format: string, data: any) {
     return this._api.post<any>(
-      `${AppConfig.API_ENDPOINT}/${ModuleConfig.MODULE_URL}/${x.id}/${format}`,
+      `${this.ABSOLUTE_MODULE_URL}}/${x.id}/${format}`,
       data
     );
   }

@@ -1,16 +1,10 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Routes, RouterModule } from "@angular/router";
-import {
-  HttpClientModule,
-  HttpClientXsrfModule,
-  HTTP_INTERCEPTORS
-} from "@angular/common/http";
+import { HttpClientXsrfModule } from "@angular/common/http";
 import { GN2CommonModule } from "@geonature_common/GN2Common.module";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
-
-import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-// import { NgbModalBackdrop } from "@ng-bootstrap/ng-bootstrap/modal/modal-backdrop";
+import { ConfigModule } from "@geonature/utils/configModule/core";
 
 import { ExportListComponent } from "./export-list/export-list.component";
 
@@ -27,7 +21,8 @@ const routes: Routes = [{ path: "", component: ExportListComponent }];
     CommonModule,
     GN2CommonModule,
     NgbModule.forRoot(),
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    ConfigModule.forChild()
   ],
   declarations: [ExportListComponent],
   providers: [ExportService],

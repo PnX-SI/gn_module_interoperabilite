@@ -2,9 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { CommonService } from "@geonature_common/service/common.service";
-import { AppConfig } from "@geonature_config/app.config";
+import { ConfigService } from "@geonature/utils/configModule/core";
 
-import { ModuleConfig } from "../module.config";
 import {
   Export,
   ExportService,
@@ -19,7 +18,7 @@ import {
 })
 export class ExportListComponent implements OnInit {
   exports: Export[];
-  public api_endpoint = `${AppConfig.API_ENDPOINT}/${ModuleConfig.MODULE_URL}`;
+  public api_endpoint: string;
   public modalForm: FormGroup;
   public buttonDisabled = false;
   public downloading = false;
@@ -33,10 +32,15 @@ export class ExportListComponent implements OnInit {
     private _exportService: ExportService,
     private _fb: FormBuilder,
     private modalService: NgbModal,
-    private _commonService: CommonService
+    private _commonService: CommonService,
+    private _configService: ConfigService
   ) {}
 
   ngOnInit() {
+    this.api_endpoint =
+      this._configService.getSettings("API_ENDPOINT") +
+      "/" +
+      this._configService.getSettings("EXPORTS.MODULE_URL");
     this.modalForm = this._fb.group({
       formatSelection: ["", Validators.required],
       exportLicence: ["", Validators.required],
